@@ -2,7 +2,7 @@
 url=https://github.com/alibaba/canal/releases/download/canal-1.1.7-alpha-1/canal.deployer-1.1.7-SNAPSHOT.tar.gz
 
 echo "1. Download release ..."
-curl -C - -L ${url}
+curl -C - -LO ${url}
 ln -sfT ${url##*/} canal.deployer.tar.gz
 
 echo "2. Build container ..."
