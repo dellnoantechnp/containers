@@ -28,9 +28,9 @@ then will build container in localhost.
 # 3. run this container
 ```shell
 $ docker run -d --name=canal-server --restart=on-failure:3 \
-    -e mysql_user=canal \
-    -e mysql_passwd=<canal_db_user_password> \
-    -e mysql_tsdb=canal_tsdb \
+    -e canal_user=canal \
+    -e canal_passwd=<canal_db_user_password> \
+    -e canal_tsdb=canal_tsdb \
     -e mysql=127.0.0.1 \
     -p 11110:11110 \
     -p 11111:11111 \
