@@ -1,6 +1,11 @@
 FROM openjdk:8u342-slim-bullseye
 WORKDIR /app
 ENV abs_bin_path=/app/canal-server/bin
+# apt install package
+RUN apt update && apt install file -y
+# clean apt cache
+RUN rm -rf /var/lib/apt/lists/deb.debian.org_debian*
+
 ADD canal.deployer.tar.gz /app/canal-server
 ADD files /app/files
 RUN cp files/startup.sh canal-server/bin/startup.sh ;\
