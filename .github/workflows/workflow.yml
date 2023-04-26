@@ -21,7 +21,7 @@ jobs:
             ## tag names like 'v0.0.1'
             VERSION=${GITHUB_REF#refs/tags/v}
           fi
-          echo "TAGS=${VERSION}" >> $GITHUB_OUTPUT
+          echo "TAGS=${VERSION}" >> "$GITHUB_OUTPUT"
   push-ghcr:
     needs: get-tags
     runs-on: ubuntu-20.04
