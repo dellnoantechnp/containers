@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       TZ: Asia/Shanghai
+    outputs:
+      TAGS: ${{ steps.set-output-id.output.TAGS }}
     steps:
       - uses: actions/checkout@v3
       - name: set-output
@@ -49,5 +51,5 @@ jobs:
           file: src/canal-server/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ needs.get-tags.set-output-id.outputs.TAGS }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ needs.get-tags.outputs.TAGS }}
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
