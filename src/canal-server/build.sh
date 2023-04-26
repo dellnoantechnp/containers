@@ -11,7 +11,7 @@ function choose_releases(){
     printf "[%-2s]  -->   %s\n" ${COUNT} "${line}"
     let COUNT=$COUNT+1
   done < <(echo "${RELEASE_LIST}")
-  read -p "Please choose number: " choose_item
+  read -t 5 -p "Please choose number: " choose_item
   url=$(echo "${RELEASE_LIST}" | head -"${choose_item}" | tail -1 | grep -Po 'https://.*tar.gz')
 }
 
