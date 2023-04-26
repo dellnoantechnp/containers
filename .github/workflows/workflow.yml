@@ -1,11 +1,11 @@
 name: ci
 on:
-  workflow_dispatch: #github页面手动触发
+  workflow_dispatch:
   push:
     tags:
-      - "v*.*"
+      - "v*.*.*"
 env:
-  IMAGE_NAME: canal-server #这是您的镜像名
+  IMAGE_NAME: canal-server
 jobs:
   get-tags:
     runs-on: ubuntu-20.04
