@@ -1,5 +1,15 @@
 #!/bin/bash
 
+#
+# Maintainer: dellnoantechnp  dellnoantechnp@gmail.com
+# Project: https://github.com/dellnoantechnp/containers
+# Note: Manual build use this script.
+#
+function usage() {
+  echo "help message."
+  echo -e "\nUsage: bash build.sh [build|download|help]\n"
+}
+
 function choose_releases(){
   local COUNT=1
   RELEASE_LIST=$(curl -s -L -H "Accept: application/vnd.github+json"  \
@@ -11,21 +21,40 @@ function choose_releases(){
     printf "[%-2s]  -->   %s\n" ${COUNT} "${line}"
     let COUNT=$COUNT+1
   done < <(echo "${RELEASE_LIST}")
-  read -t 5 -p "Please choose number: " choose_item
+  read -t 5 -p $'Please choose number[5s]\e[5m:\e[0m ' choose_item
+  echo
   url=$(echo "${RELEASE_LIST}" | head -"${choose_item}" | tail -1 | grep -Po 'https://.*tar.gz')
 }
 
-choose_releases
+function download_release(){
+  url=${url:=https://github.com/alibaba/canal/releases/download/canal-1.1.7-alpha-1/canal.deployer-1.1.7-SNAPSHOT.tar.gz}
+  echo "INFO: download url --> ${url}"
 
-url=${url:=https://github.com/alibaba/canal/releases/download/canal-1.1.7-alpha-1/canal.deployer-1.1.7-SNAPSHOT.tar.gz}
-echo "INFO: download url --> ${url}"
+  [[ -f ${url##*/} ]] && rm -rf ${url##*/}
+  curl -C - -LO ${url}
+  ln -sfT ${url##*/} canal.deployer.tar.gz
+}
 
+function build_container(){
+  ## only support localhost.
+  VERSION=$(echo ${url} | grep -Po "(?<=canal.deployer-)(\d.){2}\d(-[[:upper:]]+){0,1}(?=.tar.gz)")
+  docker build -t canal-server:${VERSION} -f Dockerfile .
+}
 
-echo "1. Download release ..."
-rm -rf ${url##*/}
-curl -C - -LO ${url}
-ln -sfT ${url##*/} canal.deployer.tar.gz
-
-echo "2. Build container ..."
-VERSION=$(echo ${url} | grep -Po "(?<=canal.deployer-)(\d.){2}\d(-[[:upper:]]+){0,1}(?=.tar.gz)")
-docker build -t canal-server:${VERSION} -f Dockerfile .
+case $1 in
+build)
+  choose_releases
+  echo "1. Download release ..."
+  download_release
+  echo "2. Build container ..."
+  build_container
+  ;;
+download)
+  choose_releases
+  echo "1. Download release ..."
+  download_release
+  ;;
+*)
+  usage
+  ;;
+esac

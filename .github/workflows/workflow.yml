@@ -38,10 +38,15 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.repository_owner }}
           password: ${{ secrets.PACKAGES_TOKEN }}
+      - name: cd workdir
+        run: cd src/canal-server
+      - name: download artifact
+        run: bash build.sh download
       - name: Build && Push
         uses: docker/build-push-action@v2
         with:
-          context: src/canal-server
+          context: .
+          file: ./Dockerfile
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ needs.get-tags.outputs.tags }}
