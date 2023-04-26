@@ -21,7 +21,7 @@ jobs:
             ## tag names like 'v0.0.1'
             VERSION=${GITHUB_REF#refs/tags/v}
           fi
-          echo "TAGS=${VERSION}" >> $GITHUB_ENV
+          echo "TAGS=${VERSION}" >> $GITHUB_OUTPUT
   push-ghcr:
     needs: get-tags
     runs-on: ubuntu-20.04
@@ -48,5 +48,5 @@ jobs:
           file: src/canal-server/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.TAGS }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ needs.get-tags.outputs.TAGS }}
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
