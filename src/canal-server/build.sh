@@ -1,10 +1,12 @@
 #!/bin/bash
-
 #
 # Maintainer: dellnoantechnp  dellnoantechnp@gmail.com
 # Project: https://github.com/dellnoantechnp/containers
 # Note: Manual build use this script.
 #
+
+DEFAULT_CANAL_VERSION_PATH=https://github.com/alibaba/canal/releases/download/canal-1.1.6-hotfix-1/canal.deployer-1.1.6.tar.gz
+
 function usage() {
   echo "help message."
   echo -e "\nUsage: bash build.sh [build|download|help]\n"
@@ -28,7 +30,7 @@ function choose_releases(){
 
 function download_release(){
   ## Default release version.
-  url=${url:=https://github.com/alibaba/canal/releases/download/canal-1.1.6-hotfix-1/canal.deployer-1.1.6.tar.gz}
+  url=${url:=${DEFAULT_CANAL_VERSION_PATH}}
   echo "INFO: download url --> ${url}"
 
   [[ -f ${url##*/} ]] && rm -rf ${url##*/}
