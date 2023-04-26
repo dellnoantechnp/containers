@@ -44,6 +44,9 @@ jobs:
           password: ${{ secrets.PACKAGES_TOKEN }}
       - name: download artifact
         run: bash build.sh download
+      - name: test
+        run:
+          - echo "${{ needs.get-tags.outputs.TAGS }}"
       - name: Build && Push
         uses: docker/build-push-action@v4
         with:
