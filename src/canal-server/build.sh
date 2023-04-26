@@ -27,7 +27,8 @@ function choose_releases(){
 }
 
 function download_release(){
-  url=${url:=https://github.com/alibaba/canal/releases/download/canal-1.1.7-alpha-1/canal.deployer-1.1.7-SNAPSHOT.tar.gz}
+  ## Default release version.
+  url=${url:=https://github.com/alibaba/canal/releases/download/canal-1.1.6-hotfix-1/canal.deployer-1.1.6.tar.gz}
   echo "INFO: download url --> ${url}"
 
   [[ -f ${url##*/} ]] && rm -rf ${url##*/}

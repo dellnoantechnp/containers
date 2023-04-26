@@ -1,4 +1,5 @@
 FROM openjdk:8u342-slim-bullseye
+LABEL org.opencontainers.image.source https://github.com/dellnoantechnp/containers
 WORKDIR /app
 ENV abs_bin_path=/app/canal-server/bin
 # apt install package
