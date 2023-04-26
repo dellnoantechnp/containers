@@ -46,7 +46,7 @@ jobs:
       - name: Build && Push
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: src/canal-server
           file: src/canal-server/Dockerfile
           push: true
           tags: |
