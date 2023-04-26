@@ -11,10 +11,8 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       TZ: Asia/Shanghai
-    outputs:
-      tags: ${{ steps.set-output-id.outputs.tags }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: set-output
         id: set-output-id
         run: |
@@ -23,7 +21,7 @@ jobs:
             ## tag names like 'v0.0.1'
             VERSION=${GITHUB_REF#refs/tags/v}
           fi
-          echo "TAGS=${VERSION}" >> $GITHUB_OUTPUT
+          echo "TAGS=${VERSION}" >> $GITHUB_ENV
   push-ghcr:
     needs: get-tags
     runs-on: ubuntu-20.04
