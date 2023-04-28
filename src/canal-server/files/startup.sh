@@ -1,4 +1,5 @@
 #!/bin/bash 
+trap 'echo -e "WARN: receive Shutdown signal \nStopping CanalLauncher [${PID}] ....." && kill -TERM $PID' TERM INT
 
 export LANG=en_US.UTF-8
 current_path=${PWD}
@@ -96,12 +97,17 @@ else
   JAVA_OPTS="$JAVA_OPTS -XX:+UseFastAccessorMethods -XX:+PrintAdaptiveSizePolicy -XX:+PrintTenuringDistribution"
 fi
 
-if [ -n "$str" ]; then
-  # JAVA_OPTS="-server -Xms2048m -Xmx3072m -Xmn1024m -XX:SurvivorRatio=2 -XX:PermSize=96m -XX:MaxPermSize=256m -XX:MaxTenuringThreshold=15 -XX:+DisableExplicitGC $JAVA_OPTS"
-  # For G1
-  JAVA_OPTS="-server -Xms2g -Xmx3g -XX:+UseG1GC -XX:MaxGCPauseMillis=250 -XX:+UseGCOverheadLimit -XX:+ExplicitGCInvokesConcurrent $JAVA_OPTS"
+#if [ -n "$str" ]; then
+#  ## 64-bit
+#  # JAVA_OPTS="-server -Xms2048m -Xmx3072m -Xmn1024m -XX:SurvivorRatio=2 -XX:PermSize=96m -XX:MaxPermSize=256m -XX:MaxTenuringThreshold=15 -XX:+DisableExplicitGC $JAVA_OPTS"
+#  # For G1
+if [[ "$JVMFLAGS" =~ -Xm[xs].*-Xm[xs] ]]; then
+    debug "Using specified values (JVMFLAGS=${JVMFLAGS})"
+    JAVA_OPTS="${JVMFLAGS} ${JAVA_OPTS}"
 else
-  JAVA_OPTS="-server -Xms1024m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:MaxPermSize=128m $JAVA_OPTS"
+    debug "Setting '-Xmx${CANAL_HEAP_SIZE}m -Xms${CANAL_HEAP_SIZE}m' heap options..."
+    JAVA_OPTS="-server -Xmx${CANAL_HEAP_SIZE}m -Xms${CANAL_HEAP_SIZE}m -XX:+UseG1GC -XX:MaxGCPauseMillis=250 -XX:+UseGCOverheadLimit -XX:+ExplicitGCInvokesConcurrent $JAVA_OPTS"
+
 fi
 
 JAVA_OPTS=" $JAVA_OPTS -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8"
@@ -120,8 +126,10 @@ then
   echo LOG CONFIGURATION : $logback_configurationFile
   echo canal conf : $canal_conf
   echo CLASSPATH :$CLASSPATH
-  $JAVA $JAVA_OPTS $JAVA_DEBUG_OPT $CANAL_OPTS -classpath .:$CLASSPATH com.alibaba.otter.canal.deployer.CanalLauncher
-  echo $! > $base/bin/canal.pid
+  $JAVA $JAVA_OPTS $JAVA_DEBUG_OPT $CANAL_OPTS -classpath .:$CLASSPATH com.alibaba.otter.canal.deployer.CanalLauncher &
+  PID=$!
+  echo "CanalLauncher PID: $PID"
+  wait ${PID}
 
   echo "cd to $current_path for continue"
   cd $current_path
