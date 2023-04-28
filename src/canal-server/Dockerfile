@@ -7,7 +7,10 @@ LABEL org.opencontainers.image.source=https://github.com/dellnoantechnp/containe
 
 
 WORKDIR /app
-ENV abs_bin_path=/app/canal-server/bin \
+ENV OS_ARCH="${TARGETARCH:-amd64}" \
+    OS_FLAVOUR="debian-11" \
+    OS_NAME="linux" \
+    abs_bin_path=/app/canal-server/bin \
     PATH="/opt/scripts:$PATH" \
     APP_NAME="Canal-Server"
 
