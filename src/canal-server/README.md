@@ -8,22 +8,27 @@
 ### i). my.cnf configuration
 ```inf
 [mysqld]
-log-bin=mysql-bin    # 开启 binlog
-binlog-format=ROW    # 选择 ROW 模式
-server_id=1          # 配置 MySQL replaction 需要定义，不要和 canal 的 slaveId 重复
+log-bin=mysql-bin    # enable log-bin, 开启 binlog
+binlog-format=ROW    # choose format to ROW, 选择 ROW 模式
+server_id=1          # specified ID for mysqld, 配置 MySQL replaction 需要定义，不要和 canal 的 slaveId 重复
 ```
 
 ### ii). grant `canal-db-user` permission
 ```inf
+## for mysql repl user
 CREATE USER canal@'localhost' IDENTIFIED [WITH mysql_native_password] BY 'canal';  
 GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'canal'@'%';
 -- GRANT ALL PRIVILEGES ON *.* TO 'canal'@'%' ;
+
+## for mysql TSDB user
+CREATE user canal_tsdb@'localhost' IDENTIFIED [WITH mysql_native_password] BY 'canal_tsdb';
+GRANT ALL ON canal_tsdb.* TO canal_tsdb@'localhost';
 ```
 
 ## 2. create container image
 Run `build.sh` script build container image.
 
-they will download specified release `.tar.gz` package,
+they will download specified release `canal-deployer-**.tar.gz` package,
 
 then will build container in localhost.
 
