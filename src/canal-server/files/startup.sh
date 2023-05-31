@@ -120,7 +120,7 @@ if [[ -n $ENV_DESTINATIONS ]]; then
   done
   if [[ $need_remove_example_instance == "true" ]]; then
     echo "WARN: now need to remove ${canal_conf$/*}/example instance."
-    rm -rf ${canal_conf$/*}/example
+    rm -rf ${canal_conf%/*}/example
   fi
 fi
 
