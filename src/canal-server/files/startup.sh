@@ -107,7 +107,21 @@ if [[ "$JVMFLAGS" =~ -Xm[xs].*-Xm[xs] ]]; then
 else
     debug "Setting '-Xmx${CANAL_HEAP_SIZE}m -Xms${CANAL_HEAP_SIZE}m' heap options..."
     JAVA_OPTS="-server -Xmx${CANAL_HEAP_SIZE}m -Xms${CANAL_HEAP_SIZE}m -XX:+UseG1GC -XX:MaxGCPauseMillis=250 -XX:+UseGCOverheadLimit -XX:+ExplicitGCInvokesConcurrent $JAVA_OPTS"
+fi
 
+if [[ -n $ENV_DESTINATIONS ]]; then
+  echo "INFO: find canal-server instance destinations from env ENV_DESTINATIONS=[$ENV_DESTINATIONS]"
+  destinations=$(echo $ENV_DESTINATIONS | tr ',' ' ')
+  need_remove_example_instance="true"
+  for i in $destinations; do
+    if [[ $i == "example" ]]; then
+      need_remove_example_instance="false"
+    fi
+  done
+  if [[ $need_remove_example_instance == "true" ]]; then
+    echo "WARN: now need to remove ${canal_conf$/*}/example instance."
+    rm -rf ${canal_conf$/*}/example
+  fi
 fi
 
 JAVA_OPTS=" $JAVA_OPTS -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8"
