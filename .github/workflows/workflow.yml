@@ -19,31 +19,31 @@ jobs:
           - dockerfile: ./src/xxl-job-admin/Dockerfile
             image: dellnoantechnp/xxl-job-admin
 
-      permissions:
-        contents: read
-        packages: write
+    permissions:
+      contents: read
+      packages: write
 
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-        - name: login to the Container registry
-          uses: docker/login-action@v2
-          with:
-            registry: ${{ env.REGISTRY }}
-            username: ${{ github.repository_owner }}
-            password: ${{ secrets.PACKAGES_TOKEN }}
+      - name: login to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.PACKAGES_TOKEN }}
 
-        - name: Dockerfile metadata
-          id: meta
-          uses: docker/metadata-action@v4
-          with:
-            images: ${{ env.REGISTRY }}/${{ matrix.image }}
+      - name: Dockerfile metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ matrix.image }}
 
-        - name: meta output
-          shell: bash
-          run: |
-            echo ${{ steps.meta.outputs.labels }}
+      - name: meta output
+        shell: bash
+        run: |
+          echo ${{ steps.meta.outputs.labels }}
 
   get-tags:
     runs-on: ubuntu-20.04
