@@ -41,6 +41,7 @@ jobs:
             images: ${{ env.REGISTRY }}/${{ matrix.image }}
 
         - name: meta output
+          shell: bash
           run: |
             echo ${{ steps.meta.output.labels }}
 
