@@ -2,7 +2,7 @@
 #
 # Maintainer: dellnoantechnp  dellnoantechnp@gmail.com
 # Project: https://github.com/dellnoantechnp/containers
-# Note: Manual build use this script.
+# Note: Manual build to be use this script.
 #
 
 DEFAULT_CANAL_VERSION_PATH=https://github.com/alibaba/canal/releases/download/canal-1.1.6-hotfix-1/canal.deployer-1.1.6.tar.gz
