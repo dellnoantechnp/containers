@@ -43,7 +43,7 @@ jobs:
         - name: meta output
           shell: bash
           run: |
-            echo ${{ steps.meta.output.labels }}
+            echo ${{ steps.meta.outputs.labels }}
 
   get-tags:
     runs-on: ubuntu-20.04
