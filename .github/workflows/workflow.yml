@@ -50,7 +50,7 @@ jobs:
       - name: get version from Dockerfile labels
         id: tag
         run: |
-          VERSION=$(cat ${{ matrix.dockerfile }} | grep -Po "(?<=org.opencontainers.image.version=\").*\"")
+          VERSION=$(cat ${{ matrix.dockerfile }} | grep -Po "(?<=org.opencontainers.image.version=\").*(?=\")")
           echo "TAGS=v$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: version output
