@@ -8,7 +8,7 @@ env:
   IMAGE_NAME: canal-server
   REGISTRY: ghcr.io
 jobs:
-  build-and-push-image:
+  get-tags:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -16,12 +16,18 @@ jobs:
         include:
           - dockerfile: ./src/canal-server/Dockerfile
             image: dellnoantechnp/canal-server
+            context-path: src/canal-server
           - dockerfile: ./src/xxl-job-admin/Dockerfile
             image: dellnoantechnp/xxl-job-admin
+            context-path: src/xxl-job-admin
 
     permissions:
       contents: read
       packages: write
+
+    env:
+      TZ: Asia/Shanghai
+      REGISTRY: ghcr.io
 
     outputs:
       TAGS: ${{ steps.tag.outputs.TAGS }}
@@ -57,52 +63,69 @@ jobs:
         run: |
           echo ${{ steps.tag.outputs.TAGS }}
 
-  get-tags:
-    runs-on: ubuntu-20.04
-    env:
-      TZ: Asia/Shanghai
-    outputs:
-      TAGS: ${{ steps.set-output-id.outputs.TAGS }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: set-output
-        id: set-output-id
-        shell: bash
-        run: |
-          VERSION=edge
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            ## tag names like 'v0.0.1'
-            VERSION=${GITHUB_REF#refs/tags/v}
-          fi
-          echo "TAGS=v$VERSION" >> "$GITHUB_OUTPUT"
-  push-ghcr:
-    needs: get-tags
-    runs-on: ubuntu-20.04
-    env:
-      TZ: Asia/Shanghai
-      REGISTRY: ghcr.io
-    defaults:
-      run:
-        working-directory: src/canal-server
-    steps:
-      - uses: actions/checkout@v3
-      - name: Login
+      - name: Login into container registry
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.repository_owner }}
           password: ${{ secrets.PACKAGES_TOKEN }}
-      - name: download artifact
-        run: bash build.sh download
-      - name: test
-        run: |
-          echo "${{ needs.get-tags.outputs.TAGS }}"
+
       - name: Build && Push
         uses: docker/build-push-action@v4
         with:
-          context: src/canal-server
-          file: src/canal-server/Dockerfile
+          context: ${{ matrix.context-path }}
+          file: ${{ matrix.dockerfile }}
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ needs.get-tags.outputs.TAGS }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.TAGS }}
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
+
+#  get-tags:
+#    runs-on: ubuntu-20.04
+#    env:
+#      TZ: Asia/Shanghai
+#    outputs:
+#      TAGS: ${{ steps.set-output-id.outputs.TAGS }}
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: set-output
+#        id: set-output-id
+#        shell: bash
+#        run: |
+#          VERSION=edge
+#          if [[ $GITHUB_REF == refs/tags/* ]]; then
+#            ## tag names like 'v0.0.1'
+#            VERSION=${GITHUB_REF#refs/tags/v}
+#          fi
+#          echo "TAGS=v$VERSION" >> "$GITHUB_OUTPUT"
+#  push-ghcr:
+#    needs: get-tags
+#    runs-on: ubuntu-20.04
+#    env:
+#      TZ: Asia/Shanghai
+#      REGISTRY: ghcr.io
+#    defaults:
+#      run:
+#        working-directory: src/canal-server
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Login
+#        uses: docker/login-action@v2
+#        with:
+#          registry: ${{ env.REGISTRY }}
+#          username: ${{ github.repository_owner }}
+#          password: ${{ secrets.PACKAGES_TOKEN }}
+#      - name: download artifact
+#        run: bash build.sh download
+#      - name: test
+#        run: |
+#          echo "${{ needs.get-tags.outputs.TAGS }}"
+#      - name: Build && Push
+#        uses: docker/build-push-action@v4
+#        with:
+#          context: src/canal-server
+#          file: src/canal-server/Dockerfile
+#          push: true
+#          tags: |
+#            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ needs.get-tags.outputs.TAGS }}
+#            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
