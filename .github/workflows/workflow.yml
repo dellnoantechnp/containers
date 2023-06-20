@@ -23,6 +23,9 @@ jobs:
       contents: read
       packages: write
 
+    outputs:
+      TAGS: ${{ steps.tag.outputs.TAGS }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -45,8 +48,14 @@ jobs:
           echo "${{ steps.meta.outputs.labels }}"
 
       - name: get version from Dockerfile labels
+        id: tag
         run: |
-          cat ${{ matrix.dockerfile }} | grep "org.opencontainers.image.version"
+          VERSION=$(cat ${{ matrix.dockerfile }} | grep -Po "(?<=org.opencontainers.image.version=\").*\"")
+          echo "TAGS=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: version output
+        run: |
+          echo ${{ steps.tag.outputs.TAGS }}
 
   get-tags:
     runs-on: ubuntu-20.04
