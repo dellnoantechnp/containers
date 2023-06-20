@@ -44,6 +44,10 @@ jobs:
         run: |
           echo "${{ steps.meta.outputs.labels }}"
 
+      - name: get version from Dockerfile labels
+        run: |
+          cat ${{ matrix.dockerfile }} | grep "org.opencontainers.image.version"
+
   get-tags:
     runs-on: ubuntu-20.04
     env:
