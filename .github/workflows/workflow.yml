@@ -15,10 +15,10 @@ jobs:
       matrix:
         include:
           - dockerfile: ./src/canal-server/Dockerfile
-            image: dellnoantechnp/canal-server
+            repository: dellnoantechnp/canal-server
             context-path: src/canal-server
           - dockerfile: ./src/xxl-job-admin/Dockerfile
-            image: dellnoantechnp/xxl-job-admin
+            repository: dellnoantechnp/xxl-job-admin
             context-path: src/xxl-job-admin
 
     permissions:
@@ -77,8 +77,8 @@ jobs:
           file: ${{ matrix.dockerfile }}
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.TAGS }}
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.repository }}:${{ steps.tag.outputs.TAGS }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.repository }}:latest
 
 #  get-tags:
 #    runs-on: ubuntu-20.04
