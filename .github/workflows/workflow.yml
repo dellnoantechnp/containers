@@ -77,8 +77,8 @@ jobs:
           file: ${{ matrix.dockerfile }}
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.repository }}:${{ steps.tag.outputs.TAGS }}
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.repository }}:latest
+            ${{ env.REGISTRY }}/${{ matrix.repository }}:${{ steps.tag.outputs.TAGS }}
+            ${{ env.REGISTRY }}/${{ matrix.repository }}:latest
 
 #  get-tags:
 #    runs-on: ubuntu-20.04
