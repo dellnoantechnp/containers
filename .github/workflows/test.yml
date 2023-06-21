@@ -38,7 +38,7 @@ jobs:
 
       - name: Python Container Action Template dellnoantechnp
         id: get-tag
-        uses: dellnoantechnp/container-releaser-action@v0.0.2
+        uses: dellnoantechnp/container-releaser-action@v0.0.1
         with:
           dockerfile: ${{ matrix.dockerfile }}
 
