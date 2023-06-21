@@ -36,6 +36,8 @@ jobs:
       - name: Python Container Action Template dellnoantechnp
         id: get-tag
         uses: dellnoantechnp/container-releaser-action@v0.0.1 >> $GITHUB_OUTPUT
+        with:
+          dockerfile: ${{ matrix.dockerfile }}
 
       - name: version output
         run: |
