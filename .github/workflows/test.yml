@@ -1,0 +1,42 @@
+name: test
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"   # Push events to matching v*, i.e. v1.0, v20.15.10
+env:
+  IMAGE_NAME: canal-server
+  REGISTRY: ghcr.io
+jobs:
+  get-tags:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./src/canal-server/Dockerfile
+            repository: dellnoantechnp/canal-server
+            context-path: src/canal-server
+          - dockerfile: ./src/xxl-job-admin/Dockerfile
+            repository: dellnoantechnp/xxl-job-admin
+            context-path: src/xxl-job-admin
+
+    permissions:
+      contents: read
+      packages: write
+
+    env:
+      TZ: Asia/Shanghai
+      REGISTRY: ghcr.io
+
+    outputs:
+      TAGS: ${{ steps.tag.outputs.TAGS }}
+
+    steps:
+      - name: Python Container Action Template dellnoantechnp
+        id: get-tag
+        uses: dellnoantechnp/container-releaser-action@v0.0.1 >> $GITHUB_OUTPUT
+
+      - name: version output
+        run: |
+          echo ${{ steps.get-tag.outputs.version }}
