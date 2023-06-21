@@ -33,6 +33,9 @@ jobs:
       TAGS: ${{ steps.tag.outputs.TAGS }}
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Python Container Action Template dellnoantechnp
         id: get-tag
         uses: dellnoantechnp/container-releaser-action@v0.0.2
