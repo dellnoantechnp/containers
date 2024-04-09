@@ -8,3 +8,8 @@ open source project visit: [https://github.com/alibaba/canal](https://github.com
 ```shell
 docker pull ghcr.io/containers/canal-server:latest
 ```
+
+## 2. Add `dellnoantechnp/git-yq` container
+```shell
+docker pull dellnoantechnp/git-yq:latest
+```
