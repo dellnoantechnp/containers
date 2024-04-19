@@ -15,7 +15,7 @@ COPY prebuildfs /
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install required system packages and dependencies
-RUN install_packages file procps curl netcat-openbsd ca-certificates
+RUN install_packages file procps curl netcat-openbsd ca-certificates bsdmainutils
 RUN install_packages jq wget
 RUN wget https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_${OS_ARCH} -O /usr/bin/yq &&\
     chmod +x /usr/bin/yq
