@@ -38,7 +38,7 @@ function push_doc() {
   # pushrm plugin upload README.md description
   if [[ -f README.md ]]; then
     name="${image%:*}"
-    echo -e "INFO: Using `pushrm` plugin upload [${name}] description from \e[33mREADME.md\e[0m"
+    echo -e "INFO: Using 'pushrm' plugin upload [${name}] description from \e[33mREADME.md\e[0m"
     if [[ -f description.txt ]]; then
       ${CONTAINER_TOOL} pushrm -s "$(cat description.txt)" "${name}"
     else
