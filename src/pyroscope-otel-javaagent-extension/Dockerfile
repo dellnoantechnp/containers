@@ -20,7 +20,7 @@ LABEL org.opencontainers.image.title="otel profling integration for java" \
       org.opencontainers.image.version="v$version" \
       org.opencontainers.image.created="$BUILD_DATE"
 
-ADD https://github.com/grafana/otel-profiling-java/releases/download/v$version/pyroscope-otel-javaagent-extension.jar \
+ADD https://github.com/grafana/otel-profiling-java/releases/download/$version/pyroscope-otel-javaagent-extension.jar \
   /pyroscope-otel-javaagent-extension/pyroscope-otel-javaagent-extension.jar
 
 RUN chmod go+r /pyroscope-otel-javaagent-extension/pyroscope-otel-javaagent-extension.jar

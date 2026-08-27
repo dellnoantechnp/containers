@@ -19,6 +19,6 @@ LABEL org.opencontainers.image.created="$BUILD_DATE" \
       org.opencontainers.image.description="The Java profiling agent for Pyroscope.io. Based on async-profiler."
 
 
-ADD https://github.com/grafana/pyroscope-java/releases/download/v$version/pyroscope.jar /javaagent.jar
+ADD https://github.com/grafana/pyroscope-java/releases/download/$version/pyroscope.jar /javaagent.jar
 
 RUN chmod -R go+r /javaagent.jar
