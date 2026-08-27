@@ -6,15 +6,6 @@ REGISTRY=docker.io
 REPOSITORY=dellnoantechnp/pyroscope-instrumentation-java
 DEFAULT_TAG="2.9.0"
 
-IMAGE="${REGISTRY}/${REPOSITORY}:v${TAG}"
-IMAGE_LATEST="${REGISTRY}/${REPOSITORY}:latest"
-
-CONTAINER_TOOL=docker
-
-BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") # 符合 RFC 3339 格式
-BUILD_AUTHOR=dellnoantechnp
-BUILD_IMAGE_URL="https://github.com/grafana/pyroscope-java"
-
 # ── 工具检查 ──────────────────────────────────────────────
 check_tools() {
   local missing=0
@@ -99,6 +90,15 @@ elif fetch_releases; then
 else
   TAG="$DEFAULT_TAG"
 fi
+
+IMAGE="${REGISTRY}/${REPOSITORY}:v${TAG}"
+IMAGE_LATEST="${REGISTRY}/${REPOSITORY}:latest"
+
+CONTAINER_TOOL=docker
+
+BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") # 符合 RFC 3339 格式
+BUILD_AUTHOR=dellnoantechnp
+BUILD_IMAGE_URL="https://github.com/grafana/pyroscope-java"
 
 # 编译镜像
 function build_push() {
