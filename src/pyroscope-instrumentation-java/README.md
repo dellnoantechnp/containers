@@ -11,20 +11,27 @@ services:
   init-pyroscope-javaagent:
     image: docker.io/dellnoantechnp/pyroscope-instrumentation-java:latest
     volumes:
-      - shared-data:/pyroscope-otel-extension
+      - shared-data:/pyroscope
     command: >
-      sh -c "cp /javaagent.jar /pyroscope-otel-extension/javaagent.jar"
+      sh -c "echo 'Copying jar.' &&
+             cp /javaagent.jar /pyroscope/javaagent.jar &&
+             echo 'Copy completed!'"
 
   my-java-app:
     ports:
-      - "5000:5000"
+      - "5000"
     environment:
       PYROSCOPE_SERVER_ADDRESS: http://pyroscope:4040
-      OTEL_JAVAAGENT_EXTENSIONS: /pyroscope-otel-extension/javaagent.jar
+      PYROSCOPE_APPLICATION_NAME: my-java-app
+      PYROSCOPE_PROFILER_ALLOC: 512k
+      PYROSCOPE_ALLOC_LIVE: "true"
+      PYROSCOPE_PROFILER_LOCK: 10ms
+    # mount shared volumes
     volumes:
-      - shared-data:/pyroscope-otel-extension
+      - shared-data:/pyroscope
     command: >
-      sh -c "java -Dserver.port=5000 -javaagent:/pyroscope-otel-extension/javaagent.jar -jar /my-java-app.jar"
+      sh -c "java -Dserver.port=5000 -javaagent:/pyroscope/javaagent.jar -jar /my-java-app.jar"
+
     depends_on:
       init-pyroscope-javaagent:
         condition: service_completed_successfully
@@ -58,34 +65,60 @@ spec:
         - image: registry.example.com/java-backend/my-app:latest
           name: my-app
           env:
-            - name: PYROSCOPE_SERVER_ADDRESS
-              value: http://pyroscope-distributor.infrastructure.svc:4040
-            - name: PYROSCOPE_APPLICATION_NAME
+            - name: app
               valueFrom:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.labels['app']
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: PYROSCOPE_APPLICATION_NAME
+              value: $(app)
+            - name: PYROSCOPE_SERVER_ADDRESS
+              value: http://pyroscope-distributor.infrastructure.svc:4040
+            - name: PYROSCOPE_LABELS
+              value: "pod=$(POD_NAME),namespace=$(POD_NAMESPACE)"
+
+            - name: PYROSCOPE_PROFILER_ALLOC
+              value: "512k"
+
+            - name: PYROSCOPE_ALLOC_LIVE
+              value: "true"
+
+            - name: PYROSCOPE_PROFILER_LOCK
+              value: "10ms"
+          command:
+            - sh
+            - "-c"
+          args:
+            - >
+              java -javaagent:/pyroscope/javaagent.jar -jar my-app.jar
           ports:
             - containerPort: 5000
               protocol: TCP
               name: http-5000
           volumeMounts:
-            - name: pyroscope-agent
-              mountPath: /pyroscope-otel-extension
-          args:
-            - "-javaagent:/pyroscope-otel-extension/javaagent.jar"
+            - name: pyroscope
+              mountPath: /pyroscope
       initContainers:
-        - image: docker.io/dellnoantechnp/pyroscope-instrumentation-java:latest
-          name: init-pyroscope-agent
+        - image: docker.io/dellnoantechnp/pyroscope-instrumentation-java:v2.8.0
+          name: pyroscope-instrumentation-java
           command:
             - sh
             - "-c"
           args:
-            - cp -a /javaagent.jar /pyroscope-otel-extension/javaagent.jar
+            - >
+              cp -a /javaagent.jar /pyroscope/javaagent.jar
           volumeMounts:
-            - mountPath: /pyroscope-otel-extension
-              name: pyroscope-agent
+            - mountPath: /pyroscope
+              name: pyroscope
       volumes:
-        - name: pyroscope-agent
+        - name: pyroscope
           emptyDir: {}
 ```
