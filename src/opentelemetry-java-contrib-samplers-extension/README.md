@@ -141,3 +141,4 @@ For example, Release `1.59.0` states: "This release targets the OpenTelemetry Ja
 | 1.59.0            | 2.30.0                                     |
 | 1.58.0            | 2.29.0                                     |
 | 1.57.0            | 2.28.0                                     |
+| 1.56.0            | 2.27.0                                     |
