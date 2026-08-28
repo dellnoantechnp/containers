@@ -1,1 +1,1 @@
-OpenTelemetry Java Contrib Samplers - provides custom sampler implementations for OpenTelemetry Java instrumentation.
+provides custom sampler implementations for OpenTelemetry Java instrumentation.

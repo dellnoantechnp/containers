@@ -8,7 +8,7 @@ OTEL_JAVA_CONTRIB_EXTENSION="opentelemetry-samplers/"
 
 DEFAULT_TAG="1.43.0-alpha"
 REGISTRY=docker.io
-REPOSITORY=dellnoantechnp/otel-java-contrib-samplers-extension
+REPOSITORY=dellnoantechnp/opentelemetry-java-contrib-samplers-extension
 TAG="$DEFAULT_TAG"
 
 # ── 工具检查 ──────────────────────────────────────────────
