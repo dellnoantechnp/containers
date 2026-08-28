@@ -129,3 +129,15 @@ spec:
         - name: otel-samplers-extension
           emptyDir: {}
 ```
+
+## Version Compatibility
+
+`OTEL_JAVAAGENT_EXTENSIONS` is loaded as an extension of the OpenTelemetry javaagent, so the extension version must be compatible with the base OpenTelemetry Java Agent version. Version compatibility information is documented in the [OpenTelemetry Java Contrib releases](https://github.com/open-telemetry/opentelemetry-java-contrib/releases).
+
+For example, Release `1.59.0` states: "This release targets the OpenTelemetry Java Instrumentation 2.30.0." This means the extension version `1.59.0` should be used with `opentelemetry-java-instrumentation` version `2.30.0`.
+
+| Extension Version | Targets OpenTelemetry Java Instrumentation |
+|-------------------|--------------------------------------------|
+| 1.59.0            | 2.30.0                                     |
+| 1.58.0            | 2.29.0                                     |
+| 1.57.0            | 2.28.0                                     |
