@@ -1,6 +1,6 @@
 # OpenTelemetry Java Contrib Samplers Extension
 
-This image provides the [OpenTelemetry Java Contrib Samplers](https://github.com/open-telemetry/opentelemetry-java-contrib/tree/main/opentelemetry-samplers), which offers custom sampler implementations for OpenTelemetry Java instrumentation. The extension bridges profiling data with distributed traces, allowing you to correlate performance issues with specific lines of code.
+This image provides the [OpenTelemetry Java Contrib Samplers](https://github.com/open-telemetry/opentelemetry-java-contrib/tree/main/samplers), which offers custom sampler implementations for OpenTelemetry Java instrumentation. The extension bridges profiling data with distributed traces, allowing you to correlate performance issues with specific lines of code.
 
 ## Docker Compose deployment
 
