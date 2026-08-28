@@ -6,7 +6,7 @@ OTEL_JAVA_CONTRIB_BASE="https://repo1.maven.org/maven2/io/opentelemetry/contrib/
 # OpenTelemetry Java Contrib project name on maven path
 OTEL_JAVA_CONTRIB_EXTENSION="opentelemetry-samplers/"
 
-DEFAULT_TAG="1.43.0"
+DEFAULT_TAG="1.43.0-alpha"
 REGISTRY=docker.io
 REPOSITORY=dellnoantechnp/otel-java-contrib-samplers-extension
 TAG="$DEFAULT_TAG"
